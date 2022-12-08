@@ -1,12 +1,12 @@
 title: Teach a Robot to Do Maths
-description: Long Form Jekyll theme built with SASS / COMPASS / SUSY
+description: UC Berkeley EE C206/106A 2022 Fall Group 5' final project
 
-url: https://long-haul.netlify.app
+url: https://playwithrobot-berkeley.github.io
 paginate_path: "blog/page:num/"
 permalink: blog/:title/
 
 # Header Option
-# header: large
+header: large
 
 markdown: kramdown
 highlighter: rouge
@@ -16,19 +16,24 @@ paginate: 5
 navigation:
   - title: Home
     url: /index.html
-  - title: About
-    url: /about
-  - title: Contact
-    url: /contact
+  - title: Team
+    url: /team
+  - title: Design/Implementation
+    url: /design
+  - title: Result/Conclusion
+    url: /result
+  - title: Appendix
+    url: /appendix
+
 
 social:
-  github: brianmaierjr
-  twitter: brianmaierjr
-  facebook: brianmaierjr
-  email: brimaidesigns@gmail.com
-  linkedin: brianmaierjr
+  github: PlayWithRobot-Berkeley
+#  twitter: brianmaierjr
+#  facebook: brianmaierjr
+#  email: brimaidesigns@gmail.com
+#  linkedin: brianmaierjr
 
-google_analytics: "UA-58263416-1"
+#google_analytics: "UA-58263416-1"
 
 disqus:
-    shortname: brianmaierjr
+#    shortname: brianmaierjr
