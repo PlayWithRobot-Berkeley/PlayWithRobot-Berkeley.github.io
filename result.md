@@ -3,22 +3,20 @@ layout: default
 title: Result/Conclusion
 ---
 
-<div class="post">
-    <h1 class="pageTitle">About Long Haul</h1>
-    <img src="{{ '/assets/img/touring.jpg' }}" alt="">
-    <p class="intro">Long Haul is a minimal, long form <a href="http://jekyllrb.com">Jekyll</a> Theme. It can be used as is or customized to your hearts desire.</p>
-    <p>Long Haul was created in honor of all the hard working touring bicycles that have traversed the globe time and time again. Take it for a spin.</p>
-    <h2>Features</h2>
-    <ul>
-        <li>Built with SASS + GULP + BROWSERSYNC + AUTOPREFIXER</li>
-          <li>SVG Social Icons from <a href="http://customizr.net/icons/">Customizr</a></li>
-          <li><a href="http://responsive-nav.com/">Responsive Nav Menu</a></li>
-          <li><a href="https://github.com/snaptortoise/jekyll-rss-feeds">XML Feed for RSS Readers</a></li>
-          <li>Contact Form via <a href="http://formspree.io/">Formspree</a></li>
-      <li>5 Post Loop with excerpt on Home Page</li>
-          <li>Previous / Next Post Navigation</li>
-      <li>Estimated Reading Time for posts</li>
-          <li><a href="https://github.com/adobe-webplatform/dropcap.js">Drop Cap</a> on posts</li>
-          <li><a href="http://typecast.com/blog/a-more-modern-scale-for-web-typography">A Better Type Scale</a></li>
-      </ul>
-</div>
+# Result
+
+### Addition Demonstration
+
+This video demonstrates that our robot can successfully perform addition.
+
+<video id="video" controls="" preload="auto">
+    <source id="mp4" src="/assets/video/addition.mp4" type="video/mp4">
+</video>
+
+### Failure Case (Unsuccessful Formula Recognition)
+
+This video demonstrates Sawyer failed to recognize the formula due to our purple handwriting.
+
+<video id="video" controls="" preload="auto">
+    <source id="mp4" src="/assets/video/failure_case_1.mp4" type="video/mp4">
+</video>
