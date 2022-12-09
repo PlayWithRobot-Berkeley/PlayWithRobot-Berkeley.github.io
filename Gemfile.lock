@@ -97,6 +97,7 @@ DEPENDENCIES
   rack (~> 2.2.4)
   rspec
   support-for
+  webrick (~> 1.7)
 
 BUNDLED WITH
    2.3.26
