@@ -5,20 +5,17 @@ title: Design/Implementation
 
 # Design
 
-1. Formula Recognition
+Naturally, the project is splitted into two parts, each as a ROS package: 
+1. Formula recognition, i.e., the "CV" part
+1. Path planning part
 
-2. Path Planning
+## I Formula Recognition
 
-## Formula Recognition
-
-*The repo serves as a server node to recognize a math expression, transfer it into an expression tree,
-evaluate the result and publish it to ROS topic.*
-
-The repository contains a ROS package, relying on `cv_bridge`, `geometry_msgs`, `intera_interface`, `rospy` and `std_msgs`.
+The package relyies on `cv_bridge`, `geometry_msgs`, `intera_interface`, `rospy` and `std_msgs`.
 
 There are two nodes here:
 
-### `src/intera_cam.py`
+#### `src/intera_cam.py`
 
 This node serve as an test node, with no topic or service interaction with the controller or
 path planning part. It:
@@ -29,18 +26,34 @@ path planning part. It:
 - evaluate results of the parsed expression, and
 - respond to a client's query with the results.
 
-### `src/server.py`
+#### `src/server.py`
 
 This node relies on `src/intera_cam.py`, shouldering almost the same functionalities but:
 
 - will not start CV recognition until a service request from `/formula/get_solution_int` or `/formula/get_solution_str`
 - will run the recognition model continuously after a request is received until a specified number of answers is generated
 - will return the service client with the **most frequent** answer among all the answers as many as the specified number
-- will turns itself off to the silent mode and waiting for a new request again
+- will turns itself off to the silent mode and waiting for a new request again. 
 
-### ROS Node details
+### Tech details
 
-#### A. Preparation
+#### A. CV Methodolgy
+
+The CV model we used are opensourced by Intel (see [B. Preparation](#b--preparation) for details). It is
+an AutoEncoder. We found it is not very robust and requires the input images to be properly caputred and
+tuned. Hence, we set up an image-preprocessing pipeline as the callback function for each frame we retrieve
+from the camera: 
+1. Transferring the image into grayscale for further preprocessing,
+1. Resize or crop the image to a default size, according to the runtime argument,
+1. Blur the image using Gaussian kernel to filter the high-frequence noises, and
+1. Taking adaptive thresholding for recongnition
+
+_Actually, the pipeline contains two callback in order to give a better runtime visualization. The first
+display the grayscale image directly to the users so that we can understand what is in front of the camera
+easier; the second shows the results after resizing/cropping, blurring and thresholding to debug the CV codes._
+
+
+#### B. Preparation
 
 After cloning the repository, the first thing is download the pretrained models. The downloading relies on [Intel's Open Model Zoo Downloader](https://docs.openvino.ai/latest/omz_tools_downloader.html#doxid-omz-tools-downloader).
 After the downloaded is installed, you may run
@@ -59,9 +72,9 @@ Of course, never forget to `catkin_make` and `source devel/setup.bash`.
 Moreover, the Sawyer robotic arm should be started. Occasionally, the camera may fail to response. You may need to
 first SSH into the Sawyer and re-enable the robot, and then **exit the SSH session** to launch the node again.
 
-#### B. Launch file and parameters
+#### C. Launch file and parameters
 
-#### `launch/start.launch`
+##### `launch/start.launch`
 
 This starts the `intera_cam.py` node, with the following customizable parameters:
 
@@ -72,7 +85,7 @@ This starts the `intera_cam.py` node, with the following customizable parameters
 - **`confidence`**: confidence level, below which the parsed expression will be discarded.
 - **`preprocessing`**: the image preprocessing method, either `crop` or `resize` (default).
 
-#### `launch/serve.launch`
+##### `launch/serve.launch`
 
 This starts the `server.py`
 
@@ -83,39 +96,27 @@ This starts the `server.py`
 - **`confidence`**: confidence level, below which the parsed expression will be discarded.
 - **`preprocessing`**: the image preprocessing method, either `crop` (default) or `resize`.
 
-#### C. ROS Service
+#### D. ROS Service
 
 The ROS service requires a number as the request, which specifies how many confident answers the CV model should
 produced until it returns a result. The result will be the most frequent one among the answers. There are two
 service channels, differing only by the returned types:
 
-#### `/formula_rec/get_solution_int`
+##### `/formula_rec/get_solution_int`
 
 This returns an integral result. Should the answer is a floating point number, it will round the number
 to the nearest integer.
 
-#### `/formula_rec/get_solution_str`
+##### `/formula_rec/get_solution_str`
 
 This returns a floating point number as a string. Two digits after decimal point will be preserved.
 
-### Logistics
+## II. Path Planning
 
-Depending on Intel Open Model Zoo's models and sample implementation.
-
-Open-sourced under Apache licence.
-
-## Path Planning
-
-*This repository serves as a ROS package for the Group 5's final project.*
-
-### ROS Package Description
-
-The ROS package contained in this repository is called `path_planning`, which shoulders
-the following functionalities:
-
+The ROS package shoulders the following functionalities:
 1. Plan paths for the robot so that it can move its own camera to a desired place to read 
    the question and then move its end-effector to write down the answer,
-2. Query [the CV node](https://github.com/PlayWithRobot-Berkeley/FormulaRec) to parse the mathe
+2. Query [the CV node](#i-ros-node-details) to parse the mathe
    expressions it can see and retrieve the corresponding answer, and
 3. Connect with the MoveIt! action server to control the robot to execute the planned path.
 
@@ -179,7 +180,7 @@ catkin_make
    rosrun path_planning cartesian_test.py
    ```
 
-### Collaboration
+### Tech Details
 
 #### A. Code structure
 
@@ -199,37 +200,19 @@ normal (so that we can know it is our codes that corrupts X_X).*
 
 ##### `config` directory
 
-Two `YAML` configuration files are here:
+`YAML` configuration files are here:
 
-- **`camera_capture_pose.yml`**: recording the pose where the robotic arm should move to right after it
-  is launched so that its `right_hand_camera` can see the question best
 - **`digits.yml`**: storing each character's glyph
 
-#### B. An Ideal Collaboration Cycle
 
-1. Record what is to be completed in our [project watchboard](https://github.com/orgs/PlayWithRobot-Berkeley/projects)
+#### B. Path Planning
 
-2. Checkout to a new branch:
-   
-   ```sh
-   git checkout -b dev_[something to do]
-   git push --set-upstream origin dev_[something to do]
-   ```
-
-3. `git commit -a -m "[commit message]"` for several times
-
-4. Before push, always remember to
-   
-   ```sh
-   git pull -r
-   ```
-
-5. Then,
-   
-   ```sh
-   git push
-   ```
-
-6. Repeat the previous two steps for several times until something is completed
-
-7. Start a PR and **link the PR back to the item in the project watchboard created in the first step**
+The `config/digits.yml` stores the local path to write down each digit. Here,
+a path is defined as a sequence of **catesian** waypoints. When the node received
+the answer from the CV part, it retrieves the local path to write each single
+digit and adds offsets to them according to their positions to compute a global
+path. Also, it deserves notice that the path is not on a plane. When the end-
+effector enters a digit's local path, the Z-axis (height) will have a negative
+offset to make the end-effector lower; when the end-effector leaves the digit and
+starts to be transfered to the next digit's position, the waypoints' Z-axis will
+observe a positive offset to disengage the dry marker from the white board.  
