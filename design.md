@@ -48,9 +48,21 @@ from the camera:
 1. Blur the image using Gaussian kernel to filter the high-frequence noises, and
 1. Taking adaptive thresholding for recongnition
 
-_Actually, the pipeline contains two callback in order to give a better runtime visualization. The first
+<center>
+
+<img width='70%' src='/assets/img/cv_pipeline.jpg'/>
+
+</center>
+
+_**Upper left**: the raw image; **upper right**: after cropping; 
+**lower left**: gaussian blur + grayscale; **lower right**: thresholding._
+
+
+
+Actually, the pipeline contains two callback in order to give a better runtime visualization. The first
 display the grayscale image directly to the users so that we can understand what is in front of the camera
-easier; the second shows the results after resizing/cropping, blurring and thresholding to debug the CV codes._
+easier; the second shows the results after resizing/cropping, blurring and thresholding to debug the CV codes.
+
 
 
 #### B. Preparation
@@ -119,66 +131,6 @@ The ROS package shoulders the following functionalities:
 2. Query [the CV node](#i-ros-node-details) to parse the mathe
    expressions it can see and retrieve the corresponding answer, and
 3. Connect with the MoveIt! action server to control the robot to execute the planned path.
-
-### Deployment
-
-#### A. Before running the node
-
-[The CV node](https://github.com/PlayWithRobot-Berkeley/FormulaRec) shall be 
-cloned and prepared (models being downloaded, etc., see that repo's README.md for
-more details)
-
-**NOTE**
-
-Both this repository and the CV node's repository contain individual packages, but **not** ROS workspace. Hence, it would be advisable to **first create a workspace**, 
-clone both repositories into the `src` directory and then `catkin_make`, so that
-both packages can reside in the same workspace, making the life easier (and neater).
-
-Since the Sawyer robotic arm are to be used as well, do not forget to include the `intera.sh` as well.
-
-In summary, basicall you need to:
-
-```sh
-mkdir final_project # the workspace
-cd final_project
-mkdir src
-cd src
-git clone https://github.com/PlayWithRobot-Berkeley/FormulaRec.git
-git clone https://github.com/PlayWithRobot-Berkeley/PathPlanning.git
-
-# THEN FOLLOW THE README in FormulaRec to complete the CV setup
-
-cd .. # back to final_project
-ln -s /opt/ros/eecsbot_ws/intera.sh .
-
-catkin_make
-```
-
-#### B. Run the node
-
-1. Start the action server
-   
-   ```
-   rosrun intera_interface joint_trajectory_action_server.py
-   ```
-
-2. Run MoveIt! via RVIZ **in a new terminal**
-   
-   ```sh
-   roslaunch sawyer_moveit_config sawyer_moveit.launch electric_gripper:=true
-   ```
-
-3. Start the CV server node **in a new terminal**
-   
-   ```sh
-   roslaunch formula_rec server.launch
-   ```
-
-4. Finally, run the path planning node **in a new terminal**
-   
-   ```sh
-   rosrun path_planning cartesian_test.py
-   ```
 
 ### Tech Details
 
