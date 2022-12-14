@@ -30,37 +30,47 @@ and
 [PathPlanning](https://github.com/PlayWithRobot-Berkeley/PathPlanning)
 gives a detailed instructions and are strongly recommended to go through. 
 
-
 ## B. Run the codes
 
 1. Enable the robotic arm
-    ```sh
-    cd [workspace dir]
-    ./intera.sh # Enter the SSH session
-    rosrun intera_interface enalbe_robot.py -e
-    exit # exit the SSH session
-    ```
-1. Test the robotic arms' movibility and the cameras
-    ```sh
-    roslaunch intera_examples sawyer_tuck.launch
-    rosrun intera_examples camera_display.py -c right_hand_camera
-    ```
-1. Start the action server
-    ```
-    rosrun intera_interface joint_trajectory_action_server.py
-    ```
-1. Run MoveIt! via RVIZ **in a new terminal**
-    ```sh
-    roslaunch sawyer_moveit_config sawyer_moveit.launch electric_gripper:=true
-    ```
-1. Start the CV server node **in a new terminal**
-    ```sh
-    roslaunch formula_rec server.launch
-    ```
-1. Finally, run the path planning node **in a new terminal**
-    ```sh
-    rosrun path_planning cartesian_test.py
-    ```
+   
+   ```sh
+   cd [workspace dir]
+   ./intera.sh # Enter the SSH session
+   rosrun intera_interface enalbe_robot.py -e
+   exit # exit the SSH session
+   ```
+
+2. Test the robotic arms' movibility and the cameras
+   
+   ```sh
+   roslaunch intera_examples sawyer_tuck.launch
+   rosrun intera_examples camera_display.py -c right_hand_camera
+   ```
+
+3. Start the action server
+   
+   ```
+   rosrun intera_interface joint_trajectory_action_server.py
+   ```
+
+4. Run MoveIt! via RVIZ **in a new terminal**
+   
+   ```sh
+   roslaunch sawyer_moveit_config sawyer_moveit.launch electric_gripper:=true
+   ```
+
+5. Start the CV server node **in a new terminal**
+   
+   ```sh
+   roslaunch formula_rec server.launch
+   ```
+
+6. Finally, run the path planning node **in a new terminal**
+   
+   ```sh
+   rosrun path_planning cartesian_test.py
+   ```
 
 # Results and Evaluations
 
@@ -71,12 +81,16 @@ We lists our results as follows:
 This video demonstrates that our robot can successfully perform addition: 
 
 <video id="video" controls="" preload="auto">
-    <source id="mp4" src="/assets/video/addition.mp4" type="video/mp4">
+    <source id="mp4" src="/assets/video/addition_single_digit.mp4" type="video/mp4">
 </video>
 
 ### Success demo 2
 
 The robot can also write down a solution contains multiple digits: 
+
+<video id="video" controls="" preload="auto">
+    <source id="mp4" src="/assets/video/subtraction_multiple_digits.mp4" type="video/mp4">
+</video>
 
 ## Summary of our capabilities
 
