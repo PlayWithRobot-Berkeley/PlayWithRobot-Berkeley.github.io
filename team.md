@@ -13,4 +13,4 @@ title: Team
 
 - Chenyan, Zhang
 
-- Yuhao, Liu
+- Yunhao, Liu
